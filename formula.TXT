@@ -1,0 +1,18 @@
+ public static float IsNumeric(string val)
+        {
+            float dd = 0;
+            if (float.TryParse(val, out float result))
+            {
+                dd = result;
+
+            }
+            return dd;
+
+        }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }

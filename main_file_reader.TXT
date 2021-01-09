@@ -1,0 +1,78 @@
+  bool is_header_available = true;
+
+            //string test = "50658,,28/09/2020 22:55,,,,,,,'242,713.00','242,713.00',Detailed Bill,,Mrs.ANBUCHELVI B,CHARGE FOR MEDICAL ULTANT,,1.00,12345,eurt,";
+           // string test = "abcd,'12345',eurt,";
+            string[] tests = System.IO.File.ReadAllLines(@"C:\Users\RENNIE\Downloads\Usecase.Net(N)\Usecase.Net(N)\txt\main_file.txt");
+            foreach (string test in tests)
+            {
+                if (is_header_available == false)
+                {
+                    int comma_count = 0;
+
+                    StringBuilder sb = new StringBuilder();
+                    //int i = test.Length - 1;
+                    for (int i = test.Length - 1; i >= 0; i--)
+                    {
+                        if (test[i] == ',')
+                        {
+                            comma_count++;
+                        }
+
+
+
+                        if (comma_count == 2 && test[i - 1] == '\"')
+                        {
+
+                            for (int j = i - 2; j >= 0; j--)
+                            {
+                                if (test[j] == '\"')
+                                {
+                                    break;
+                                }
+
+                                sb.Append(Convert.ToString(test[j]));
+
+
+                            }
+
+
+                            break;
+                        }
+                        if (comma_count == 2 && test[i - 1] != '\"')
+                        {
+
+
+                            int limit = 0;
+                            bool is_limit_done = false;
+                            for (int g = i - 1; g > 0; g--)
+                            {
+                                if (test[g] == ',' && is_limit_done == false)
+                                {
+                                    limit = g;
+                                    is_limit_done = true;
+                                }
+                                if (is_limit_done == true)
+                                {
+                                    break;
+                                }
+                            }
+
+                            for (int g = i - 1; g > limit; g--)
+                            {
+
+                                sb.Append(Convert.ToString(test[g]));
+                            }
+                            break;
+
+                        }
+                        //  break;
+
+                    }
+                    string ddd = Convert.ToString(sb);
+                    string sss = Reverse(ddd);
+                    //Console.WriteLine(ddd);
+                    Console.WriteLine(sss);
+                
+                }
+                is_header_available = false;
+            }

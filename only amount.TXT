@@ -1,0 +1,185 @@
+using System.Data;
+using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp2
+{
+    class Program
+    {
+      public  static void Main(string[] args)
+        {
+          //  int[] main_file_values ;
+            List<int> main_file_values = new List<int>();
+           // int main_file_values_len = 0;
+
+
+            bool is_header_available = true;
+
+            //string test = "50658,,28/09/2020 22:55,,,,,,,'242,713.00','242,713.00',Detailed Bill,,Mrs.ANBUCHELVI B,CHARGE FOR MEDICAL ULTANT,,1.00,12345,eurt,";
+            // string test = "abcd,'12345',eurt,";
+            string[] tests = System.IO.File.ReadAllLines(@"C:\Users\RENNIE\Downloads\Usecase.Net(N)\Usecase.Net(N)\txt\main_file.txt");
+            foreach (string test in tests)
+            {
+                if (is_header_available == false)
+                {
+                    int comma_count = 0;
+
+                    StringBuilder sb = new StringBuilder();
+                    
+                    for (int i = test.Length - 1; i >= 0; i--)
+                    {
+                        if (test[i] == ',')
+                        {
+                            comma_count++;
+                        }
+
+
+
+                        if (comma_count == 2 && test[i - 1] == '\"')
+                        {
+
+                            for (int j = i - 2; j >= 0; j--)
+                            {
+                                if (test[j] == '\"')
+                                {
+                                    break;
+                                }
+
+                                sb.Append(Convert.ToString(test[j]));
+
+
+                            }
+
+
+                            break;
+                        }
+                        if (comma_count == 2 && test[i - 1] != '\"')
+                        {
+
+
+                            int limit = 0;
+                            bool is_limit_done = false;
+                            for (int g = i - 1; g > 0; g--)
+                            {
+                                if (test[g] == ',' && is_limit_done == false)
+                                {
+                                    limit = g;
+                                    is_limit_done = true;
+                                }
+                                if (is_limit_done == true)
+                                {
+                                    break;
+                                }
+                            }
+
+                            for (int g = i - 1; g > limit; g--)
+                            {
+
+                                sb.Append(Convert.ToString(test[g]));
+                            }
+                            break;
+
+                        }
+                        //  break;
+
+                    }
+                    string ddd = Convert.ToString(sb);
+                    string sss = Reverse(ddd);
+                    main_file_values.Add(Convert.ToInt32(IsNumeric(sss)));
+                  
+
+                }
+                is_header_available = false;
+            }
+
+
+
+
+
+
+            ////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            for (int i = 1; i < 2; i++)
+            {
+                string[] lines = System.IO.File.ReadAllLines(@"C:\Users\RENNIE\Downloads\Usecase.Net(N)\Usecase.Net(N)\txt\t-00000" + i + "engb.txt");
+
+         
+
+                foreach (string line in lines)
+                {
+                    try
+                    {
+                        string t_line = line.Trim();
+                        if (t_line != "")
+                        {
+                            string[] ddd = t_line.Split(' ');
+                            //Console.WriteLine(ddd[ddd.Length - 1]);
+                            int t = Convert.ToInt32(IsNumeric(ddd[ddd.Length - 1]));
+
+                            if (main_file_values.Contains(t)) {
+                                Console.WriteLine("\t" + t.ToString());
+                            }
+                         
+
+                            //if (is_present > -1)
+                            //{
+                            //    Console.WriteLine("\t" + t.ToString());
+
+                            //}
+
+                        }
+                    }
+                    catch (InvalidCastException ex)
+                    {
+                        Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                    }
+
+                }
+            }
+            Console.ReadLine();
+
+           
+        }
+       public static float IsNumeric(string val)
+        {
+            float dd = 0;
+            if (float.TryParse(val, out float result))
+            {
+                dd = result;
+
+            }
+            return dd;
+
+        }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+    }
+}
+    
